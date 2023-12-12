@@ -1,0 +1,30 @@
+{% extends 'base.html'%}
+
+{% block title %}
+register Page
+{% endblock %}
+
+
+{% block content%}
+
+
+<h1 class="h3 mb-3 font-weight-normal mt-4">
+    Please Create your Account
+</h1>
+<br />
+<form action="POST" style="color:white" class="form-register">
+    {{ form.username.label( class="mt-2") }}
+    {{ form.username(placeholder="User Name", class="form-control")}}
+
+    {{ form.email_address.label( class="mt-2") }}
+    {{ form.email_address(placeholder="Email Address", class="form-control")}}
+
+    {{ form.password1.label( class="mt-2") }}
+    {{ form.password1(placeholder="Password", class="form-control")}}
+
+    {{ form.password2.label( class="mt-2") }}
+    {{ form.password2(placeholder="Password Configuer", class="form-control")}}
+
+    {{ form.sumbit(class="btn btn-lg btn-block btn-primary mt-4")}}
+</form>
+{% endblock %}

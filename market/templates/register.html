@@ -6,7 +6,8 @@ register Page
 
 
 {% block content%}
-
+<!-- hidden the data from hackers -->
+{{ form.hidden_tag() }} 
 
 <h1 class="h3 mb-3 font-weight-normal mt-4">
     Please Create your Account

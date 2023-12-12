@@ -19,13 +19,14 @@ def market_page():
 def register_page():
     form = RegisterFrom()
     
-    if form.validate_on_submit(): # check on sumbit
+    if form.is_submitted(): # check on sumbit
+        
         create_user = User(username=form.username.data, email_address = form.email_address.data, password_hash = form.password1.data)
         
         db.session.add(create_user)
         db.session.commit()
         
-        return redirect(url_for(home_page))
+        return redirect(url_for('market_page'))
     
     return render_template("register.html",  form=form)
 

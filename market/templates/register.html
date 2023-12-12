@@ -7,13 +7,14 @@ register Page
 
 {% block content%}
 <!-- hidden the data from hackers -->
-{{ form.hidden_tag() }} 
+{{ form.hidden_tag() }}
 
 <h1 class="h3 mb-3 font-weight-normal mt-4">
     Please Create your Account
 </h1>
 <br />
-<form action="POST" style="color:white" class="form-register">
+<form method="POST" style="color:white" class="form-register">
+
     {{ form.username.label( class="mt-2") }}
     {{ form.username(placeholder="User Name", class="form-control")}}
 
@@ -26,6 +27,9 @@ register Page
     {{ form.password2.label( class="mt-2") }}
     {{ form.password2(placeholder="Password Configuer", class="form-control")}}
 
-    {{ form.sumbit(class="btn btn-lg btn-block btn-primary mt-4")}}
+    <br />
+
+    {{ form.submit(class="btn btn-lg btn-block btn-primary")}}
+
 </form>
 {% endblock %}

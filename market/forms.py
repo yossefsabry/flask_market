@@ -8,4 +8,4 @@ class RegisterFrom(FlaskForm):
     password1 = PasswordField(label="Password: ")
     password2 = PasswordField(label="Password Configuer: ")
     
-    sumbit = SubmitField(label="Create Acount")
+    submit = SubmitField(label="Create Acount")

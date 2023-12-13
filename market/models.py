@@ -29,7 +29,7 @@ class Item(db.Model):
 
     # this show the name in termainl  
     def __repr__(self):
-        return f'Item {self.name}'
+        return f'Item {self.name}' # to show the the query by name
 
 
 

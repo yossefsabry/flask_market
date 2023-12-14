@@ -1,24 +1,51 @@
 # import models
-from market import db, app
-from sqlalchemy import inspect
+from market import db, app, bycript, login_manager
+# from sqlalchemy import inspect  #! if want ot add the the item by the code else leave like this
+from flask_login import UserMixin #? some propertiues in the flask_login
 
+# start login manager for he user loader for flask
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # create class for user login
-class User(db.Model):
+class User(db.Model, UserMixin):
+    """
+    #? class user to store user in the database....
+    """
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(length=30), nullable=False, unique=True)
     email_address = db.Column(db.String(length=60), nullable=False ,unique=True)
     password_hash = db.Column(db.String(length=60), nullable=False)
     budget = db.Column(db.Integer(), nullable=False, default=1000)
     items = db.relationship('Item', backref='owned_user', lazy=True)
-
-
     
+    # start attrabiutes for the password and the bycribt password
+    @property
+    def password(self):
+        return self.password
+    
+    @password.setter
+    def password(self, plain_text_password):
+        """
+        #* to change the password to bycript password in the databasee....
+        """
+        self.password_hash = bycript.generate_password_hash(plain_text_password).decode('utf-8')
+        
+    def check_password_correction(self, attempted_password):
+        """
+        #? to check for the password after bycript in the login page and comppare with the database..
+        """
+        return bycript.check_password_hash(self.password_hash, attempted_password)
 # create class inhertance the features from db.moduel
 # and create the column for the table
 
 
 class Item(db.Model):
+    """
+        #* class item its table in the database for 5 column the id name price barcode and description..
+        #* and can add some relation between the user and item,,,
+    """
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(length=30), nullable=False, unique=True)
     price = db.Column(db.Integer(), nullable=False)
@@ -29,9 +56,14 @@ class Item(db.Model):
 
     # this show the name in termainl  
     def __repr__(self):
+        """
+        #* to control to show the item in the database from termianl by name only 
+        """
         return f'Item {self.name}' # to show the the query by name
 
 
+
+# !! this code is to add the item by the vscode not terminal if want ot use it must add some changes in the code blow first
 
 # make the table if not exist for change the table 
 # with app.app_context():

@@ -1,5 +1,7 @@
-from flask import  Flask, render_template
+from flask import  Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 
 app = Flask(__name__)
 # start config for the db
@@ -11,6 +13,12 @@ app.config['SECRET_KEY'] = 'd65337e2c9b74480cc144ebf93b9d16711b106b9'
 app.debug=True
 # make instance from sqlalchemy class 
 db = SQLAlchemy(app)
+
+# start making bycrypt app for the password
+bycript = Bcrypt(app)
+
+# start login manager for the login page
+login_manager = LoginManager(app)
 
 from market import routes
 

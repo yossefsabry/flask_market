@@ -27,6 +27,12 @@ register Page
 
     {{ form.password2.label( class="mt-2") }}
     {{ form.password2(placeholder="Password Configuer", class="form-control")}}
+    
+    <br />
+    <div>
+        <span>Already Have An Account:  </span>
+        <a href="{{ url_for('login_page') }}" class="btn btn-sm btn-secondary"> Login </a>
+    </div>
 
     <br />
 

@@ -5,8 +5,8 @@ from market.models import Item
 from market.forms import RegisterFrom, login_from
 from market import db
 from market.models import User
-from flask_login import login_user
-
+from flask_login import login_user, current_user, logout_user, login_required
+import email_validator
 
 @app.route('/') # create route
 @app.route('/home') 
@@ -17,6 +17,7 @@ def home_page(): # create the function for the routes
     return render_template("home.html") # render_template use to add a file html for this route
 
 @app.route('/market')
+@login_required
 def market_page():
     """
     return: the market page for the product for the account
@@ -26,6 +27,7 @@ def market_page():
 
 
 
+# ! there is an error in the code  "Exception: Install 'email_validator' for email validation support." in register >>>>>>> 
 @app.route('/register', methods=['GET', 'POST']) # make the route methods accapt the post and get in the server
 def register_page():
     """
@@ -44,6 +46,9 @@ def register_page():
                 create_user = User(username=form.username.data, email_address=form.email_address.data, password=form.password1.data) # create uesr to add for the database
                 db.session.add(create_user)# add the new user
                 db.session.commit() # push the new user
+
+                login_user(current_user) #* bulid in function for login 
+                flash("the account is created successfuly...", category="success")
                 
             except ValidationError as e:
                 print(f"Error creating user: {e}")
@@ -87,3 +92,10 @@ def login_page():
             # ? else there is an error
             flash("username and password not match! please try again", category="danger")
     return render_template('login.html' , form = form)
+
+# start logout routes
+@app.route("/logout")
+def logout_page():
+    logout_user()
+    flash("you have been logout ...", category='info')
+    return redirect(url_for('home_page'))

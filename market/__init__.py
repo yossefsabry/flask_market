@@ -20,6 +20,12 @@ bycript = Bcrypt(app)
 # start login manager for the login page
 login_manager = LoginManager(app)
 
+# redirct login_requeried function to home page
+login_manager.login_view = 'login_page'
+
+# change the shape for login massage in login page for redirect 
+login_manager.login_message_category = 'info'
+
 from market import routes
 
 

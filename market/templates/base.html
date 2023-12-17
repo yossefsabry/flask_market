@@ -32,12 +32,27 @@
                 </li>
             </ul>
             <ul class="navbar-nav">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" style="color: lawngreen; font-weight: bold;">
+                        <i class="fas fa-coins"></i>
+                        <span>{{ current_user.budget_prettier }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Welcome, {{ current_user.username }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout_page') }}">Logout</a>
+                </li>
+                {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('login_page') }}">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('register_page') }}">Register</a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </nav>

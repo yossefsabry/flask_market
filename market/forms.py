@@ -17,7 +17,7 @@ class RegisterFrom(FlaskForm):
     
     def vaildators_email(self, email_to_create):
         email = User.query.filter_by(email_address= email_to_create.data).first()
-        if email:x
+        if email:
             raise ValidationError('Email Is Already Exists...')
     
     username = StringField(label="Username: ", validators=(Length(min=2, max=30), DataRequired()))
@@ -26,7 +26,6 @@ class RegisterFrom(FlaskForm):
     password2 = PasswordField(label="Password Configuer: ", validators=(EqualTo('password1'), DataRequired()))
     
     submit = SubmitField(label="Create Acount")
-    
     
     
 class login_from(FlaskForm):

@@ -2,7 +2,7 @@ from wtforms import ValidationError
 from market import app
 from flask import render_template, redirect, url_for, request, flash, get_flashed_messages
 from market.models import Item
-from market.forms import RegisterFrom, login_from
+from market.forms import RegisterFrom, login_from, PurchesesItemForm
 from market import db
 from market.models import User
 from flask_login import login_user, current_user, logout_user, login_required
@@ -16,18 +16,20 @@ def home_page(): # create the function for the routes
     """
     return render_template("home.html") # render_template use to add a file html for this route
 
-@app.route('/market')
+@app.route('/market', methods=['GET', 'POST'])
 @login_required
 def market_page():
     """
     return: the market page for the product for the account
     """
+    purchese_item = PurchesesItemForm() # form for the sumbit button purchese
+    if purchese_item.validate_on_submit():
+        # if request.method == "POST"
+        print(request.form.get('purchese_item'))
+
     items = Item.query.all() # get all the item from the database
-    return render_template("market.html" , items=items)
+    return render_template("market.html" , items=items, purchese_item=purchese_item)
 
-
-
-# ! there is an error in the code  "Exception: Install 'email_validator' for email validation support." in register >>>>>>> 
 @app.route('/register', methods=['GET', 'POST']) # make the route methods accapt the post and get in the server
 def register_page():
     """

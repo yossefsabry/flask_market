@@ -45,7 +45,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="POST">
+                <form method="POST">
                     {{ purchese_item.hidden_tag() }}
                     <h3 style="text-align: center;">
                         Are you sure you want to buy {{ item.name }} for {{ item.price }}$ ?

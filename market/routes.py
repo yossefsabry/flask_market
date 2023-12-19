@@ -2,7 +2,7 @@ from wtforms import ValidationError
 from market import app
 from flask import render_template, redirect, url_for, request, flash, get_flashed_messages
 from market.models import Item
-from market.forms import RegisterFrom, login_from, PurchesesItemForm
+from market.forms import RegisterFrom, login_from, PurchesesItemForm, SellesItemForm
 from market import db
 from market.models import User
 from flask_login import login_user, current_user, logout_user, login_required
@@ -23,12 +23,37 @@ def market_page():
     return: the market page for the product for the account
     """
     purchese_item = PurchesesItemForm() # form for the sumbit button purchese
+    selling_form = SellesItemForm() # for sumbit sell
+    
     if purchese_item.validate_on_submit():
-        # if request.method == "POST"
-        print(request.form.get('purchese_item'))
+        if request.method == "POST":
+            purchese_item_click = request.form.get('purchese_item') 
+            p_item_object = Item.query.filter_by(name=purchese_item_click).first()
+            # print(request.form.get('purchese_item')) #? explain ...
+            
+            if p_item_object:
+                if current_user.can_purchese_item(p_item_object):
+                    p_item_object.buy(current_user)
+                    flash(f"Congratulations! You purchased {p_item_object.name} for {p_item_object.price}$", category="success")
+                else:
+                    flash(f"Unfortunately, you don't have enough money to purchase {p_item_object.name}!", category='danger')                    
+            
+            # start selling  item for user ....
+            sold_item = request.form.get('sold_item')
+            s_item_object = Item.query.filter_by(name=sold_item).first()
+            if s_item_object:
+                if current_user.can_sell(s_item_object):
+                    s_item_object.sell(current_user)
+                    flash(f"Congratulations! You sold {s_item_object.name} back to market!", category='success')
+                else:
+                    flash(f"Something went wrong with selling {s_item_object.name}", category='danger')
+    
+            return redirect(url_for('market_page'))
 
-    items = Item.query.all() # get all the item from the database
-    return render_template("market.html" , items=items, purchese_item=purchese_item)
+    if request.method == "GET":
+        items = Item.query.filter_by(owner=None) # get all the item from the database that dont have a ownership(not buy)
+        owned_items = Item.query.filter_by(owner=current_user.id) # get all the item from the database that dont have a ownership(not buy)
+        return render_template("market.html" , items=items, purchese_item=purchese_item, owned_items=owned_items, selling_form=selling_form)
 
 @app.route('/register', methods=['GET', 'POST']) # make the route methods accapt the post and get in the server
 def register_page():

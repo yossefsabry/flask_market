@@ -24,7 +24,7 @@ class User(db.Model, UserMixin):
     @property
     def budget_prettier(self):
         if len(str(self.budget)) >= 4:
-            return f'{str(self.budget)[:-3]}, {str(self.budget)[-3:]} $'
+            return f'{str(self.budget)[:-3]}, {str(self.budget)[-3:]}'
         else:
             return f'{self.budget}'
     # start attrabiutes for the password and the bycribt password
@@ -44,6 +44,15 @@ class User(db.Model, UserMixin):
         #? to check for the password after bycript in the login page and comppare with the database..
         """
         return bycript.check_password_hash(self.password_hash, attempted_password)
+    
+    # check if the price that user have is more than the price for the object
+    def can_purchese_item(self, object_item):
+        return self.budget >= object_item.price
+    
+    # sell item for user
+    def can_sell(self, item_obj):
+        return item_obj in self.items
+    
 # create class inhertance the features from db.moduel
 # and create the column for the table
 
@@ -67,6 +76,18 @@ class Item(db.Model):
         #* to control to show the item in the database from termianl by name only 
         """
         return f'Item {self.name}' # to show the the query by name
+    
+    # buy item get the item the owenrship for the user that purchese and change the user budget and commit the changes in the db
+    def buy(self, user):
+        self.owner = user.id
+        user.budget -= self.price
+        db.session.commit()
+
+    # for sell item 
+    def sell(self, user):
+        self.owner = None
+        user.budget += self.price
+        db.session.commit()
 
 
 
